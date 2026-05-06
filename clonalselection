@@ -1,0 +1,35 @@
+import random
+
+def fitness(x):
+    return x**2
+
+def create_population(size, low, high):
+    population=[]
+    for i in range(size):
+        value = random.uniform(low, high)
+        population.append(value)
+    return population
+
+def clone_and_mutate(selected, clone_factor, mutation_rate):
+    clones=[]
+    for s in selected:
+        for _ in range(clone_factor):
+            mutated=s+random.uniform(-mutation_rate,mutation_rate)
+            clones.append(mutated)
+        return clones
+    
+def clonal_selection(pop_size=10,generations=5):
+    population=create_population(10,-100,100)
+    for gen in range(generations):
+        population.sort(key=fitness,reverse=True)
+        selected=population[:pop_size//2]
+        clones=clone_and_mutate(selected,clone_factor=3,mutation_rate=0.1)
+        population=selected+clones
+        population.sort(key=fitness,reverse=True)
+        population=population[:pop_size]
+        print(f"Gen {gen}: Best = {population[0]:.4f} , fitness={fitness(population[0]):.4f}")
+
+    return population[0]
+
+best=clonal_selection()
+print("Best_solution:" , best)
